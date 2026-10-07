@@ -13,17 +13,18 @@
 <body>
   <header class="header">
     <a class="brand" href="index.html"><span class="logo" aria-hidden="true">✓</span><span data-i18n="brand">Study Rhythm</span></a>
-    <div class="header-tools"><p data-i18n="tagline">It all starts with one task.</p>
+    <div class="header-tools">
       <div class="languages" role="group" data-i18n-aria="language" aria-label="Language">
-        <button type="button" data-language="en" lang="en" aria-pressed="true">English</button>
-        <button type="button" data-language="bg" lang="bg" aria-pressed="false">Български</button>
+        <button type="button" data-language="en" lang="en" aria-label="English" aria-pressed="true">EN</button>
+        <span aria-hidden="true">|</span>
+        <button type="button" data-language="bg" lang="bg" aria-label="Български" aria-pressed="false">BG</button>
       </div>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false"><svg class="moon" aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20.6 14.1A8.8 8.8 0 0 1 9.9 3.4 8.8 8.8 0 1 0 20.6 14.1Z"/></svg><svg class="sun" aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="4"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/></svg><span id="theme-label">Dark mode</span></button>
     </div>
   </header>
   <main>
     <section class="intro" aria-labelledby="page-title">
-      <h1 id="page-title" data-i18n="heading">My study tasks</h1>
-      <p data-i18n="subtitle">Organize your tasks. Make time for yourself.</p>
+      <h1 id="page-title" data-i18n="heading">Tasks</h1>
       <div class="stats" data-i18n-aria="summary" aria-label="Summary of all tasks">
         <div><strong id="active-count">0</strong><span data-i18n="activeCount">active</span></div>
         <div><strong id="today-count">0</strong><span data-i18n="todayCount">due today</span></div>
@@ -32,6 +33,7 @@
     </section>
     <p id="storage-error" class="error" role="alert" hidden></p>
     <p id="language-error" class="error" role="alert" hidden></p>
+    <p id="theme-error" class="error" role="alert" hidden></p>
     <div class="workspace">
       <section class="list-panel" data-i18n-aria="taskList" aria-label="Task list">
         <label class="sr-only" for="search" data-i18n="searchLabel">Search tasks or subjects</label>
@@ -51,7 +53,6 @@
         </div>
         <div id="task-list"></div>
         <div id="empty" class="empty">
-          <span class="empty-mark" aria-hidden="true">✓</span>
           <h2 id="empty-title">Room for a fresh start</h2>
           <p id="empty-text">Add your first task using the form.</p>
           <button id="examples" class="secondary" type="button" data-i18n="examples">Load sample tasks</button>
@@ -79,7 +80,7 @@
     </div>
     <div class="feedback" role="status"><span id="message"></span><button id="undo" class="text-button" type="button" data-i18n="undo" hidden>Restore</button></div>
   </main>
-  <footer><span data-i18n="localOnly">Saved only in this browser.</span><br><span class="footer-note" data-i18n="privacy">No account. No sync. Your study rhythm.</span></footer>
+  <footer><span data-i18n="localOnly">Saved only in this browser.</span></footer>
   <dialog id="delete-dialog" aria-labelledby="delete-title">
     <h2 id="delete-title" data-i18n="deleteTitle">Delete task</h2><p id="delete-description"></p>
     <div class="dialog-actions"><button id="cancel-delete" class="secondary" type="button" data-i18n="cancel">Cancel</button><button id="confirm-delete" class="danger" type="button" data-i18n="confirmDelete">Delete task</button></div>
