@@ -13,9 +13,33 @@ let storageDamaged = false;
 let storageErrorKey = "";
 let messageState = null;
 let validationShown = false;
+const THEME_KEY = "ucheben-ritam.theme.v1";
+let theme = "light";
+let themeStorageFailed = false;
+try { if (localStorage.getItem(THEME_KEY) === "dark") theme = "dark"; }
+catch { themeStorageFailed = true; }
+
+// Theme changes only CSS variables, so the current task and form state stay intact.
+function applyTheme() {
+  document.documentElement.dataset.theme = theme;
+  $("theme-toggle").setAttribute("aria-pressed", String(theme === "dark"));
+  $("theme-toggle").setAttribute("aria-label", t("themeToggle"));
+  $("theme-toggle").title = t(theme === "dark" ? "lightMode" : "darkMode");
+  $("theme-label").textContent = t(theme === "dark" ? "lightMode" : "darkMode");
+  $("theme-error").hidden = !themeStorageFailed;
+  $("theme-error").textContent = t("themeFailed");
+}
+
+$("theme-toggle").addEventListener("click", () => {
+  theme = theme === "dark" ? "light" : "dark";
+  try { localStorage.setItem(THEME_KEY, theme); themeStorageFailed = false; }
+  catch { themeStorageFailed = true; }
+  applyTheme();
+});
 
 // Change text only: keep tasks, filters, drafts, edit IDs and undo state intact.
 function applyLanguage() {
+  applyTheme();
   document.documentElement.lang = language;
   document.title = t("pageTitle");
   document.querySelector('meta[name="description"]').content = t("description");
