@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A local study planner with subjects, deadlines and priorities.">
+  <title>Study Rhythm — task planner</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="styles.css">
+  <script src="i18n.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="header">
+    <a class="brand" href="index.html"><span class="logo" aria-hidden="true">✓</span><span data-i18n="brand">Study Rhythm</span></a>
+    <div class="header-tools"><p data-i18n="tagline">It all starts with one task.</p>
+      <div class="languages" role="group" data-i18n-aria="language" aria-label="Language">
+        <button type="button" data-language="en" lang="en" aria-pressed="true">English</button>
+        <button type="button" data-language="bg" lang="bg" aria-pressed="false">Български</button>
+      </div>
+    </div>
+  </header>
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <h1 id="page-title" data-i18n="heading">My study tasks</h1>
+      <p data-i18n="subtitle">Organize your tasks. Make time for yourself.</p>
+      <div class="stats" data-i18n-aria="summary" aria-label="Summary of all tasks">
+        <div><strong id="active-count">0</strong><span data-i18n="activeCount">active</span></div>
+        <div><strong id="today-count">0</strong><span data-i18n="todayCount">due today</span></div>
+        <div><strong id="done-count">0</strong><span data-i18n="doneCount">completed</span></div>
+      </div>
+    </section>
+    <p id="storage-error" class="error" role="alert" hidden></p>
+    <p id="language-error" class="error" role="alert" hidden></p>
+    <div class="workspace">
+      <section class="list-panel" data-i18n-aria="taskList" aria-label="Task list">
+        <label class="sr-only" for="search" data-i18n="searchLabel">Search tasks or subjects</label>
+        <input id="search" type="search" data-i18n-placeholder="searchPlaceholder" placeholder="Search tasks…" maxlength="120">
+        <div class="toolbar">
+          <div class="tabs" role="group" data-i18n-aria="statusFilter" aria-label="Task status">
+            <button type="button" data-filter="all" aria-pressed="true" data-i18n="all">All</button>
+            <button type="button" data-filter="active" aria-pressed="false" data-i18n="active">Active</button>
+            <button type="button" data-filter="done" aria-pressed="false" data-i18n="done">Completed</button>
+          </div>
+          <div class="selects">
+            <label class="sr-only" for="subject-filter" data-i18n="subjectFilter">Filter by subject</label>
+            <select id="subject-filter"><option value="">All subjects</option></select>
+            <label class="sr-only" for="sort" data-i18n="sort">Sort tasks</label>
+            <select id="sort"><option value="date" data-i18n="sortDate">By deadline</option><option value="priority" data-i18n="sortPriority">By priority</option><option value="newest" data-i18n="sortNewest">Newest first</option></select>
+          </div>
+        </div>
+        <div id="task-list"></div>
+        <div id="empty" class="empty">
+          <span class="empty-mark" aria-hidden="true">✓</span>
+          <h2 id="empty-title">Room for a fresh start</h2>
+          <p id="empty-text">Add your first task using the form.</p>
+          <button id="examples" class="secondary" type="button" data-i18n="examples">Load sample tasks</button>
+          <button id="reset-filters" class="secondary" type="button" data-i18n="clearFilters" hidden>Clear filters</button>
+        </div>
+        <p id="result-count" class="result-count" aria-live="polite"></p>
+      </section>
+      <section class="form-panel" aria-labelledby="form-title">
+        <h2 id="form-title">New task</h2>
+        <form id="task-form" novalidate>
+          <label for="title" data-i18n="task">Task</label>
+          <input id="title" name="title" data-i18n-placeholder="taskPlaceholder" placeholder="e.g. Prepare a presentation…" required maxlength="100" autocomplete="off" aria-describedby="form-error">
+          <label for="subject" data-i18n="subject">Subject</label>
+          <input id="subject" name="subject" data-i18n-placeholder="subjectPlaceholder" placeholder="e.g. Computer Science" list="subjects" required maxlength="40" autocomplete="off" aria-describedby="form-error">
+          <datalist id="subjects"></datalist>
+          <label for="due" data-i18n="deadline">Deadline</label>
+          <input id="due" name="due" type="date" required min="1900-01-01" max="9999-12-31" aria-describedby="form-error">
+          <label for="priority" data-i18n="priority">Priority</label>
+          <select id="priority" name="priority"><option value="medium" data-i18n="medium">Medium</option><option value="high" data-i18n="high">High</option><option value="low" data-i18n="low">Low</option></select>
+          <p id="form-error" class="form-error" role="alert" hidden></p>
+          <button id="submit" class="primary" type="submit">Add task</button>
+          <button id="cancel-edit" class="secondary" type="button" data-i18n="cancelEdit" hidden>Cancel editing</button>
+        </form>
+      </section>
+    </div>
+    <div class="feedback" role="status"><span id="message"></span><button id="undo" class="text-button" type="button" data-i18n="undo" hidden>Restore</button></div>
+  </main>
+  <footer><span data-i18n="localOnly">Saved only in this browser.</span><br><span class="footer-note" data-i18n="privacy">No account. No sync. Your study rhythm.</span></footer>
+  <dialog id="delete-dialog" aria-labelledby="delete-title">
+    <h2 id="delete-title" data-i18n="deleteTitle">Delete task</h2><p id="delete-description"></p>
+    <div class="dialog-actions"><button id="cancel-delete" class="secondary" type="button" data-i18n="cancel">Cancel</button><button id="confirm-delete" class="danger" type="button" data-i18n="confirmDelete">Delete task</button></div>
+  </dialog>
+  <template id="task-template">
+    <article class="task">
+      <input type="checkbox" class="task-check">
+      <div class="task-content"><h3></h3><p class="task-meta"></p></div>
+      <span class="priority"></span>
+      <div class="task-actions"><button class="edit text-button" type="button">Edit</button><button class="delete text-button" type="button">Delete</button></div>
+    </article>
+  </template>
+</body>
+</html>
